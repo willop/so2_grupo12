@@ -1,0 +1,1 @@
+export const url_api = `http://`+process.env.REACT_APP_BACKEND+`:4000/`;

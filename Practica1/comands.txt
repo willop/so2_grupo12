@@ -1,0 +1,91 @@
+------------------FRONTEND----------------
+npx create-react-app frontend
+//progress bar
+npm install --save react-circular-progressbar
+npm install dotenv --save
+npm i axios
+
+
+------------------Backend GO --------------
+
+Para go.mod 
+-   go mod init main.go
+Para go.sum 
+-   go tity
+
+
+--------------- Server Node js------------------
+npm init -y
+npm install -D nodemon
+npm i express
+npm i cors
+npm install dotenv --save
+npm install mysql
+npm install router
+
+------------------ Flujo de la aplicacion --------------
+Crear los archivos de cpu y ram
+```
+    make all
+```
+
+para cargar los modulos a los procesos de la maquina anfitrion
+- sudo insmod cpu_g12.ko
+- sudo insmod ram_g12.ko
+
+Ejecutar el backend de go
+- go run main.go
+        ### Recordar que tiene un .env ###
+
+
+
+----------------------- Docker------------------------------
+Construir imagen de backen nodejs 
+sudo docker build -t willop/p2_backend_201408419:latest .
+sudo docker build -t willop/p2_frontend_201408419:latest .
+---- Docker-compose ---------------------------------
+sudo docker-compose build
+sudo docker-compose up
+sudo docker-compose down
+
+sudo docker build -t willop/p2_backendgo_201408419:latest .
+sudo docker run -e user=$user -e pass=$pass -e host=$host -e port=$port -e db_name=$db_name --name backendgo -it willop/p2_backendgo_201408419:funcional
+
+
+sudo docker run -e user=root -e pass=root -e host=00.00.00.00 -e port=3306 -e db_name=Practica2 --name backendgo -it willop/p2_backendgo_201408419:latest
+
+
+
+----------------- Dependencias maquinas virtuales ---------------------------
+
+-- modulos
+sudo apt install make
+
+* gcc
+sudo apt update
+sudo apt install build-essential
+sudo apt-get install manpages-dev
+gcc --version
+
+* docker
+Link:https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04-es
+
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+sudo apt update
+apt-cache policy docker-ce
+sudo apt install docker-ce
+
+
+
+
+-- aplicacion
+sudo apt update
+--docker
+--docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+
