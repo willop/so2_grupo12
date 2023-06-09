@@ -101,3 +101,14 @@ Ejecutar el backend de go
 * sudo apt install build-essential
 * sudo apt-get install manpages-dev
 * gcc --version
+
+---
+# Cloud run
+* docker pull <<image>>
+* docker tag <<imagen>> gcr.io/<ID>/<nombre>:<version>
+* docker push <<imagen>>
+* docker tag willop/frontend_so2 gcr.io/sopes2-389205/frontend:V1
+* docker push gcr.io/sopes2-389205/frontend:V1    
+
+    
+
