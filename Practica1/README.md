@@ -114,7 +114,11 @@ Ejecutar el backend de go
 proc_create("mem_grupo12", 0, NULL, &operaciones);
 printk(KERN_INFO "Hola mundo, somos el grupo 12 y este es el monitor de memoria\n"); //imprimiendo carnet al usar insmod
 ```
-
+## Se utiliza para dejar un mensaje al eliminar el modulo de kernel
+```
+remove_proc_entry("mem_grupo12", NULL);
+printk(KERN_INFO "Sayonara mundo, somos el grupo 12 y este fue el monitor de memoria\n");  //Imprimiendo el nombre del curso al usar rmmod
+```
 
 ---
 # Dependencias maquinas virtuales 
