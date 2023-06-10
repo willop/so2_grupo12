@@ -110,5 +110,6 @@ Ejecutar el backend de go
 * docker tag willop/frontend_so2 gcr.io/sopes2-389205/frontend:V1
 * docker push gcr.io/sopes2-389205/frontend:V1    
 
-    
+# Instalando make
+* sudo apt install make
 
