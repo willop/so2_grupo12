@@ -91,6 +91,26 @@ Ejecutar el backend de go
         <center> ### Recordar que tiene un .env ### </center>
 
 ---
+# Librerias
+#include <linux/module.h>	/* Nesesario para todos los modulos */
+#include <linux/kernel.h>	/* Nesesario para informacion del kernel */
+#include <linux/init.h>		/* Necesario para macros */
+
+// para usar KERN_INFO
+#include <linux/kernel.h>
+//Header para los macros module_init y module_exit
+#include <linux/init.h>
+//Header necesario porque se usara proc_fs
+#include <linux/proc_fs.h>
+/* for copy_from_user */
+#include <asm/uaccess.h>
+/* Header para usar la lib seq_file y manejar el archivo en /proc*/
+#include <linux/seq_file.h>
+
+proc_create("mem_grupo12", 0, NULL, &operaciones);
+printk(KERN_INFO "Hola mundo, somos el grupo 12 y este es el monitor de memoria\n"); //imprimiendo carnet al usar insmod
+
+---
 # Dependencias maquinas virtuales 
 
 ## Modulos
