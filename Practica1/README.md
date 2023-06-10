@@ -113,3 +113,8 @@ Ejecutar el backend de go
 # Instalando make
 * sudo apt install make
 
+# Instalacion de git
+* apt-get install git-core
+    
+# Instalacion de golang
+* sudo apt-get install golang
