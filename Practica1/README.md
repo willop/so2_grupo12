@@ -67,12 +67,14 @@ Para go.sum
 
 ---
 ## Server Node js
+```
 * npm init -y
 * npm install -D nodemon
 * npm i express
 * npm i cors
 * npm install dotenv --save
 * npm install router
+```
 
 # Flujo de la aplicacion
 
@@ -82,11 +84,15 @@ Crear los archivos de cpu y ram
 ```
 
 para cargar los modulos a los procesos de la maquina anfitrion
-- sudo insmod cpu_g12.ko
-- sudo insmod ram_g12.ko
+```
+sudo insmod cpu_g12.ko
+sdo insmod ram_g12.ko
+```
 
 Ejecutar el backend de go
-- go run main.go
+```
+go run main.go
+```
 <br/>
         <center> ### Recordar que tiene un .env ### </center>
 
@@ -124,27 +130,39 @@ printk(KERN_INFO "Sayonara mundo, somos el grupo 12 y este fue el monitor de mem
 # Dependencias maquinas virtuales 
 
 ## Modulos
+```
 *   sudo apt install make
+```
 
 ## gcc
+```
 * sudo apt update
 * sudo apt install build-essential
 * sudo apt-get install manpages-dev
 * gcc --version
-
+```
 ---
 # Cloud run
+
+```
 * docker pull <<image>>
 * docker tag <<imagen>> gcr.io/<ID>/<nombre>:<version>
 * docker push <<imagen>>
 * docker tag willop/frontend_so2 gcr.io/sopes2-389205/frontend:V1
 * docker push gcr.io/sopes2-389205/frontend:V1    
+```
 
 # Instalando make
+```
 * sudo apt install make
+```
 
 # Instalacion de git
+```
 * apt-get install git-core
+```
     
 # Instalacion de golang
+```
 * sudo apt-get install golang
+```
