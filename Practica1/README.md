@@ -92,6 +92,7 @@ Ejecutar el backend de go
 
 ---
 # Librerias
+```
 #include <linux/module.h>	/* Nesesario para todos los modulos */
 #include <linux/kernel.h>	/* Nesesario para informacion del kernel */
 #include <linux/init.h>		/* Necesario para macros */
@@ -106,9 +107,14 @@ Ejecutar el backend de go
 #include <asm/uaccess.h>
 /* Header para usar la lib seq_file y manejar el archivo en /proc*/
 #include <linux/seq_file.h>
+``` 
 
+## Se utiliza para dejar un mensaje al crear el modulo de kernel
+```
 proc_create("mem_grupo12", 0, NULL, &operaciones);
 printk(KERN_INFO "Hola mundo, somos el grupo 12 y este es el monitor de memoria\n"); //imprimiendo carnet al usar insmod
+```
+
 
 ---
 # Dependencias maquinas virtuales 
