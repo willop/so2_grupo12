@@ -1,0 +1,95 @@
+.comp_process{
+    height: 30px;
+    padding-left: 5px;
+    line-height: 30px;
+    border-radius: 7px;
+    margin-bottom: 3px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#running{
+    background-color: rgb(0, 136, 255);
+}
+
+#running:hover{
+    background-color: rgb(14, 110, 194);
+}
+
+#zombie{
+    background-color: rgb(14,186,199)
+}
+#zombie:hover{
+    background-color: rgb(34, 150, 158)
+}
+
+#stoped{
+    background-color: rgb(206,66,172);
+}
+#stoped:hover{
+    background-color: rgb(170, 49, 140);
+}
+
+#sleep{
+    background-color: rgb(225,160,14);
+}
+#sleep:hover{
+    background-color: rgb(173, 129, 25);
+}
+
+
+
+#icono1{
+    color: rgb(21, 255, 0);
+    animation: giraricono infinite 2s;
+    animation-timing-function: linear;
+    border-radius: 50%;
+    height: 36px;
+}
+@keyframes giraricono {
+    from{
+        transform: rotate(360deg);
+    }to{
+        transform: rotate(0deg);
+    }
+    
+}
+
+#icono2{
+    animation: cambiocolor infinite alternate 1s;
+    animation-timing-function: linear;
+    border-radius: 50%;
+    height: 30px;
+}
+@keyframes cambiocolor {
+    from{
+        color: red;
+    }to{
+        color: rgb(0, 0, 0);
+    }
+    
+}
+
+#icono3{
+    color: rgb(255, 255, 255);
+    animation: alto infinite alternate 0.15s;
+    animation-timing-function: linear;
+    border-radius: 50%;
+    height: 30px;
+}
+
+
+#icono4{
+    color: rgb(17, 17, 17);
+    animation: alto infinite alternate 1.5s;
+    animation-timing-function: linear;
+    border-radius: 50%;
+    height: 30px;
+}
+@keyframes alto {
+    from{
+        transform: rotate(20deg);
+    }to{
+        transform: rotate(-20deg);
+    }
+}
