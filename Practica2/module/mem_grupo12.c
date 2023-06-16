@@ -39,8 +39,10 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
     long memoria_buffer;
     si_meminfo(&libsys_info);
 
-    totalram = libsys_info.totalram*(unsigned long long)libsys_info.mem_unit / 1024;
-    freeram = (uint64_t)libsys_info.freeram *(unsigned long long)libsys_info.mem_unit / 1024;
+    totalram = libsys_info.totalram*(unsigned long long)libsys_info.mem_unit / (1024*1024);
+	//totalram = libsys_info.totalram / (1024 * 1024);
+    freeram = (uint64_t)libsys_info.freeram * (unsigned long long)libsys_info.mem_unit / (1024*1024);
+	//freeram = libsys_info.freeram / (1024 * 1024);
     //freeram = (libsys_info.availram*(unsigned long long)sysconf(_SC_PAGESIZE))/1024;
     disponible = si_mem_available() *(unsigned long long)libsys_info.mem_unit / 1024;
     memoria_share = libsys_info.sharedram * (unsigned long long)libsys_info.mem_unit/ 1024 ;
@@ -65,8 +67,8 @@ asm volatile("cpuid"
 
     //printf("Cores: %d\nThreads: %d\nActual thread: %d\n",eax,ebx,edx);
     //printf("Processor model is `%s'\n", data.cpu_codename);
-    seq_printf(archivo, "{\n\"RAM\": %ld,\n \"FREE\": %ld ,\n \"USADA\":%ld,\n \"Cores\": %d,\n \"Threads\": %d,\n \"Actual_thread\": %d,\n\"Utilizada\":%8li,\n\"Compartida\":%8li\n}", totalram,memlibre,usoram,eax,ebx,edx,resta,memoria_share);
-    //seq_printf(archivo, "{\n\"RAM\": %ld,\n \"FREE\": %ld ,\n \"USADA\":%ld,\n \"CPUNAME\":%s}", totalram,freeram,usoram, data.cpu_codename);
+    //seq_printf(archivo, "{\n\"RAM\": %ld,\n \"FREE\": %ld ,\n \"USADA\":%ld,\n \"Cores\": %d,\n \"Threads\": %d,\n \"Actual_thread\": %d,\n\"Utilizada\":%8li,\n\"Compartida\":%8li\n}", totalram,memlibre,usoram,eax,ebx,edx,resta,memoria_share);
+    seq_printf(archivo, "{\n\"RAM\": %ld,\n \"FREE\": %ld ,\n \"USADA\":%ld\n}", totalram,freeram,usoram);
     return 0;
 }
 
@@ -77,10 +79,10 @@ static int al_abrir(struct inode *inode, struct file *file)
 }
 
 //Si el kernel es 5.6 o mayor se usa la estructura proc_ops
-static struct proc_ops operaciones =
+static struct file_operations operaciones =
 {
-    .proc_open = al_abrir,
-    .proc_read = seq_read
+    .open = al_abrir,
+    .read = seq_read
 };
 
 //Funcion a ejecuta al insertar el modulo en el kernel con insmod

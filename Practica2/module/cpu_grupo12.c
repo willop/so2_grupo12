@@ -7,7 +7,7 @@
 #include <linux/seq_file.h>
 #include <linux/hugetlb.h>
 
-#include <linux/sched.h>
+#include <linux/sched/signal.h>
 #include <linux/mm.h>
 #include <linux/cred.h>
 
@@ -23,10 +23,14 @@ struct list_head * listProcesos;
 static int escribir_archivo(struct seq_file *archivo, void *v)
 {    
     //unsigned long rss;
-
+    int cantidadpross =0;
+    for_each_process(cpu){
+	cantidadpross++;
+	}
+	seq_printf(archivo, "{\n\"Cantidad\": %d,\n",cantidadpross);
     bool aux = true;
     bool aux2 = true;
-    seq_printf(archivo, "{\n\"Procesos\":[\n");
+    seq_printf(archivo, "\n\"Procesos\":[\n");
     for_each_process(cpu){
         if(aux){
             seq_printf(archivo, "\n");
@@ -38,7 +42,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         seq_printf(archivo, "{\n");
         seq_printf(archivo, "\"idp\":\"%d\",\n", cpu->pid);                                 //para id
         seq_printf(archivo, "\"nproceso\":\"%s\",\n", cpu->comm);                           //para nombre
-        seq_printf(archivo, "\"statep\":\"%d\",\n", cpu->__state);                          //para estado
+        seq_printf(archivo, "\"statep\":\"%d\",\n", cpu->state);                          //para estado
         //seq_printf(archivo, "\"ramp\":\"%lu\",\n", get_mm_rss(cpu->mm));//(cpu->acct_vm_mem1);         //para ram
         if(cpu->mm) {
             seq_printf(archivo, "\"ramp\":\"%lu\",\n", (get_mm_rss(cpu->mm)<<PAGE_SHIFT)/(1024*1024));
@@ -61,7 +65,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
             //seq_printf(archivo, "\"hid\":\"%d\",\n", );
             //seq_printf(archivo, " --------> ");
             seq_printf(archivo, "\"hnombre\":\"%s\",\n", hijos->comm);
-            seq_printf(archivo, "\"hestado\":\"%d\",\n", hijos->__state);
+            seq_printf(archivo, "\"hestado\":\"%d\",\n", hijos->state);
             if(hijos->mm) {
                 seq_printf(archivo, "\"hram\":\"%lu\"\n", (get_mm_rss(hijos->mm)<<PAGE_SHIFT)/(1024*1024));
             }else{
@@ -84,10 +88,10 @@ static int al_abrir(struct inode *inode, struct file *file)
 }
 
 //Si el kernel es 5.6 o mayor se usa la estructura proc_ops
-static struct proc_ops operaciones =
+static struct file_operations operaciones =
 {
-    .proc_open = al_abrir,
-    .proc_read = seq_read
+    .open = al_abrir,
+    .read = seq_read
 };
 
 //Funcion a ejecuta al insertar el modulo en el kernel con insmod
