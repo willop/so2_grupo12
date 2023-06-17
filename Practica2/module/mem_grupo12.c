@@ -44,7 +44,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
     freeram = (uint64_t)libsys_info.freeram * (unsigned long long)libsys_info.mem_unit / (1024*1024);
 	//freeram = libsys_info.freeram / (1024 * 1024);
     //freeram = (libsys_info.availram*(unsigned long long)sysconf(_SC_PAGESIZE))/1024;
-    disponible = si_mem_available() *(unsigned long long)libsys_info.mem_unit / 1024;
+    disponible = si_mem_available() *(unsigned long long)libsys_info.mem_unit /(1024* 1024);
     memoria_share = libsys_info.sharedram * (unsigned long long)libsys_info.mem_unit/ 1024 ;
     memoria_buffer = libsys_info.bufferram * (unsigned long long)libsys_info.mem_unit/ 1024 ;
 
@@ -67,8 +67,8 @@ asm volatile("cpuid"
 
     //printf("Cores: %d\nThreads: %d\nActual thread: %d\n",eax,ebx,edx);
     //printf("Processor model is `%s'\n", data.cpu_codename);
-    //seq_printf(archivo, "{\n\"RAM\": %ld,\n \"FREE\": %ld ,\n \"USADA\":%ld,\n \"Cores\": %d,\n \"Threads\": %d,\n \"Actual_thread\": %d,\n\"Utilizada\":%8li,\n\"Compartida\":%8li\n}", totalram,memlibre,usoram,eax,ebx,edx,resta,memoria_share);
-    seq_printf(archivo, "{\n\"RAM\": %ld,\n \"FREE\": %ld ,\n \"USADA\":%ld\n}", totalram,freeram,usoram);
+    seq_printf(archivo, "{\n\"RAM\": %ld,\n \"FREE\": %ld ,\n \"USADA\":%ld,\n \"Cores\": %d,\n \"Threads\": %d,\n \"Actual_thread\": %d,\n\"Utilizada\":%8li,\n\"Compartida\":%8li\n}", totalram,memlibre,usoram,eax,ebx,edx,resta,memoria_share);
+    //seq_printf(archivo, "{\n\"RAM\": %ld,\n \"FREE\": %ld,\n\"DISPONIBLE\":%ld,\n \"USADA\":%ld\n}", totalram,freeram,disponible,usoram);
     return 0;
 }
 
