@@ -35,6 +35,10 @@ type Info_kill struct {
 	Name string `json:name`
 }
 
+type Info_get struct{
+	Id string `json:id`
+}
+
 func getModuloRAM() string {
 	cmd := exec.Command("sh", "-c", "cat /proc/mem_grupo12")
 	salida, err := cmd.CombinedOutput()
@@ -76,7 +80,7 @@ func GetDataRAM(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
-
+	
 	//var Retorno string
 	var Retorno = getModuloRAM()
 	//err := json.Unmarshal(reqBody, &info)
@@ -128,6 +132,29 @@ func KillProcess(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(info)
 }
 
+func GetInfo(w http.ResponseWriter, r *http.Request) {
+	//enableCors(&w)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Content-Type", "application/json")
+
+	var info Info_get
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	err := json.Unmarshal(reqBody, &info)
+	if err != nil {
+		fmt.Println(err)
+	}
+	cmd := exec.Command("sh", "-c", "cat /proc/%s/maps",info.Id)
+	salida, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println(err)
+	}
+	json := string(salida[:])
+	fmt.Println("**********************\nJson obtenido del proc\n*********************\n")
+	//fmt.Println(json)
+	json.NewEncoder(w).Encode(json)
+}
+
 func main() {
 	fmt.Println("Servidor de GO execute \nPort:4000\n...")
 	//-------------------------------Inicio del servidor------------------
@@ -142,6 +169,7 @@ func main() {
 	router.HandleFunc("/getCPU", GetDataCPU).Methods("GET")
 	router.HandleFunc("/getRAM", GetDataRAM).Methods("GET")
 	router.HandleFunc("/kill", KillProcess).Methods("POST")
+	router.HandleFunc("/getinfo", GetInfo).Methods("POST")
 
 	//------------------------------ servidor ------------------------------------
 	log.Fatal(http.ListenAndServe(":4000", handlers.CORS(headers, methods, origins)(router)))

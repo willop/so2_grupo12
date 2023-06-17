@@ -204,7 +204,7 @@ export default function App() {
         <br />
       </div>
       <div id='Procesos'>
-        <div id='P_execute' className='Tipe_process'>
+      <div id='P_execute' className='Tipe_process'>
           <center><h4>En ejecucion</h4></center>
           {//running, zombie, stoped, sleep
           }
@@ -220,6 +220,10 @@ export default function App() {
             })
           }
         </div>
+      </div>
+      <br />
+      <br />
+      <div id='Procesos'>
         <div id='P_zombie' className='Tipe_process'>
           <center><h4>Zombie</h4></center>
           {<Process type="zombie" idp={"PID"} name={"Nombre"} ram={"RA"} userp={"User"} />}
@@ -236,8 +240,7 @@ export default function App() {
       </div>
       <br />
       <br />
-      <br />
-      <div id="Procesos">
+      <div id='Procesos'>
       <div id='P_stoped' className='Tipe_process'>
           <center><h4>Detenido</h4></center>
           {<Process type="stoped" idp={"PID"} name={"Nombre"} ram={"RA"} userp={"User"} />}
@@ -251,6 +254,12 @@ export default function App() {
             })
           }
         </div>
+      </div>
+      <br />
+      <br />
+      <br />
+      <div id="Procesos">
+      
         <div id='P_sleep' className='Tipe_process'>
           <center><h4>Suspendido</h4></center>
           {<Process type="sleep" idp={"PID"} name={"Nombre"} ram={"RA"} userp={"User"} />}
