@@ -39,6 +39,10 @@ type Info_get struct{
 	Id string `json:id`
 }
 
+type Retornoinfo struct{
+	Info string
+}
+
 func getModuloRAM() string {
 	cmd := exec.Command("sh", "-c", "cat /proc/mem_grupo12")
 	salida, err := cmd.CombinedOutput()
@@ -138,21 +142,30 @@ func GetInfo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
 
-	var info Info_get
+	var info2 Info_get
 	reqBody, _ := ioutil.ReadAll(r.Body)
-	err := json.Unmarshal(reqBody, &info)
+	err := json.Unmarshal(reqBody, &info2)
 	if err != nil {
 		fmt.Println(err)
 	}
-	cmd := exec.Command("sh", "-c", "cat /proc/%s/maps",info.Id)
+	//fmt.Println(info2.Id)
+	comando:= "sudo cat /proc/"+info2.Id+"/maps" 
+	cmd := exec.Command("sh", "-c", comando)
 	salida, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println(err)
 	}
-	json := string(salida[:])
-	fmt.Println("**********************\nJson obtenido del proc\n*********************\n")
-	//fmt.Println(json)
-	json.NewEncoder(w).Encode(json)
+	json2 := string(salida[:])
+	fmt.Println("**********************\nget info map\n*********************\n")
+	//fmt.Println(json2)
+
+	retornostring:= &Retornoinfo{Info: ""+json2}
+	b,err := json.Marshal(retornostring)
+	if err != nil{
+		fmt.Println(err)
+		return
+	}
+	json.NewEncoder(w).Encode(string(b))
 }
 
 func main() {
@@ -173,5 +186,4 @@ func main() {
 
 	//------------------------------ servidor ------------------------------------
 	log.Fatal(http.ListenAndServe(":4000", handlers.CORS(headers, methods, origins)(router)))
-
 }
