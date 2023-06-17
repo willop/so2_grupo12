@@ -55,6 +55,7 @@ export default function App() {
   var usada = (info_ram.Utilizada) / (1024 * 1024)
   const [historialmemoria, sethis] = useState([])
   const [historialtiempo, settiempo] = useState([])
+  const [cantpross, setcantross] = useState();
 
   var datass = {
     labels: historialtiempo,
@@ -62,7 +63,7 @@ export default function App() {
       {
         label: 'Memoria ram utilizada',
         backgroundColor: 'rgba(0, 255, 0, 0.2)',
-        borderColor: 'rgb(0, 255, 0)',
+        borderColor: 'rgb(0, 0, 0)',
         borderWidth: 1,
         data: historialmemoria
       }
@@ -82,20 +83,21 @@ export default function App() {
       var query = await getRAM();
       var result = await query.json();
       var result2 = JSON.parse(result)
-      //console.log(result2);
-      setRAM(result2);
+      console.log(result2);
+      /*setRAM(result2);
       var temmpnum = (result2.Utilizada / (1024 * 1024)).toFixed(2) 
       historialmemoria.push(parseFloat(temmpnum))
       var timeee = new Date().getHours() +":"+ new Date().getMinutes()
       
       historialtiempo.push(timeee)
       //console.log(historialmemoria)
-      
+      */
       query = await getCPU();
       result = await query.json();
       var result2 = JSON.parse(result)
       //console.log(result2);
       setCPU(result2.Procesos);
+      setcantross(result2.Cantidad);
     } catch (e) {
       console.log(e)
     }
@@ -127,54 +129,47 @@ export default function App() {
       <br />
       <br />
       <br />
-      
-      <div id="div_carrousel">
-        <Carousel interval={null}>
-          <Carousel.Item>
-            <div id='Graficas'>
-              <div id="Contenedor_grafica">
-                <center><h3>RAM</h3></center>
-                <CircularProgressbar className='tam_grafica'
-                  value={info_ram.USADA}
-                  text={`${info_ram.USADA}%`}
-                  circleRatio={0.75}
-                  styles={buildStyles({
-                    rotation: 1 / 2 + 1 / 8,
-                    pathColor: "#23d2dd", //circulo
-                    strokeLinecap: "butt",
-                    trailColor: "#eee" //fondo
-                  })} />
-                <center>
-                  <h4>{usada.toFixed(2) + "Gb/" + (info_ram.RAM / (1024 * 1024)).toFixed(2) + "Gb"}</h4>
-                  <h4>{"Libre: " + (info_ram.FREE / (1024 * 1024)).toFixed(2) + "Gb"}</h4>
-                </center>
-              </div >
-
-              <div id="Contenedor_grafica">
-                <center><h3>CPU</h3></center>
-                <CircularProgressbar className='tam_grafica'
-                  value={(info_ram.Actual_thread).toFixed(1)}
-                  text={`${(info_ram.Actual_thread).toFixed(1)}%`}
-                  circleRatio={0.75}
-                  styles={buildStyles({
-                    rotation: 1 / 2 + 1 / 8,
-                    pathColor: "#dc2d22", //circulo
-                    strokeLinecap: "butt",
-                    trailColor: "#eee" //fondo
-                  })} />
-                <center>
-                  <h4>{"Cores: " + info_ram.Cores}</h4>
-                  <h4>{"Total Threads: " + info_ram.Threads}</h4>
-                </center>
-              </div >
-            </div>
-          </Carousel.Item>
-          <Carousel.Item>
-          <div id="Histograma">
-        <Line data={datass} options={optionsss}/>
-      </div>
-          </Carousel.Item>
-        </Carousel>
+      <div id='Graficas'> 
+        <div id="Contenedor_grafica">
+          <center><h3>RAM</h3></center>
+          <CircularProgressbar className='tam_grafica'
+            value={info_ram.USADA}
+            text={`${info_ram.USADA}%`}
+            circleRatio={0.75}
+            styles={buildStyles({
+              rotation: 1 / 2 + 1 / 8,
+              pathColor: "#23d2dd", //circulo
+              strokeLinecap: "butt",
+              trailColor: "#C4C4C4 " //fondo
+            })} />
+          <center>
+            <h4>{info_ram.USADA.toFixed(2) + "Gb/" + (info_ram.RAM / (1024)).toFixed(2) + "Mb"}</h4>
+            <h4>{"Libre: " + (info_ram.FREE / (1024)).toFixed(2) + "Mb"}</h4>
+          </center>
+        </div>
+        <div id="Contenedor_grafica">
+          <center><h3>CPU</h3></center>
+          <CircularProgressbar className='tam_grafica'
+            value={(info_ram.Actual_thread).toFixed(1)}
+            text={`${(info_ram.Actual_thread).toFixed(1)}%`}
+            circleRatio={0.75}
+            styles={buildStyles({
+              rotation: 1 / 2 + 1 / 8,
+              pathColor: "#dc2d22", //circulo
+              strokeLinecap: "butt",
+              trailColor: "#C4C4C4" //fondo
+            })} />
+          <center>
+            <h4>{"Cores: " + info_ram.Cores}</h4>
+            <h4>{"Total Threads: " + info_ram.Threads}</h4>
+          </center>
+        </div >
+      </div >
+      <br />
+      <br /><br />
+      <br />
+      <div id="Histograma">
+        <Line data={datass} width ={200} color= {'rgb(0, 0, 0)'} height={50} options={optionsss} />
       </div>
 
 
@@ -203,10 +198,12 @@ export default function App() {
       <br />
       <br />
       <div id="Kill_process">
-
+        <center><h1>Cantidad de procesos: {cantpross}<br /></h1></center>
+        <br />
+        <br />
+        <br />
       </div>
       <div id='Procesos'>
-
         <div id='P_execute' className='Tipe_process'>
           <center><h4>En ejecucion</h4></center>
           {//running, zombie, stoped, sleep
@@ -222,7 +219,6 @@ export default function App() {
               }
             })
           }
-
         </div>
         <div id='P_zombie' className='Tipe_process'>
           <center><h4>Zombie</h4></center>
@@ -237,7 +233,12 @@ export default function App() {
             })
           }
         </div>
-        <div id='P_stoped' className='Tipe_process'>
+      </div>
+      <br />
+      <br />
+      <br />
+      <div id="Procesos">
+      <div id='P_stoped' className='Tipe_process'>
           <center><h4>Detenido</h4></center>
           {<Process type="stoped" idp={"PID"} name={"Nombre"} ram={"RA"} userp={"User"} />}
           {

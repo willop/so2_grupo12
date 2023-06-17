@@ -1,7 +1,7 @@
 import React from 'react'
 import './Proceso.css'
 import { Kill_proces} from '../api/getmodules'
-import Modal from 'react-bootstrap/Modal';
+import {Accordion}  from 'react-bootstrap/';
 import {GrUserAdmin, GrUser,GrCloudlinux} from 'react-icons/gr'
 import { BsFillSignStopFill } from "react-icons/bs";
 import { GiShamblingZombie } from "react-icons/gi";
@@ -9,8 +9,11 @@ import { MdBedtime } from "react-icons/md";
 
 const Proceso = props => {
   return (
-    <div className='comp_process' id={props.type}>
-      <table>
+    <div>
+      <Accordion defaultActiveKey="0">
+      <Accordion.Header>
+        <div  className='comp_process' id={props.type}>
+        <table>
         <tbody>
         <tr onClick={()=>{Kill_process(props.idp,props.name)}} >
           <td width="15%">{props.idp}</td>
@@ -23,6 +26,25 @@ const Proceso = props => {
         </tr>
         </tbody>
       </table>
+      </div>
+      </Accordion.Header>
+        <Accordion.Body>
+        <table>
+        <tbody>
+        <tr onClick={()=>{Kill_process(props.idp,props.name)}} >
+          <td width="15%">{props.idp}</td>
+          <td width="50%">{props.name}</td>
+          <td width="20%">{props.ram}Mb</td>
+          {props.userp === '0'?
+          <td width="20%"><GrUserAdmin/></td>:
+          <td width="20%"><GrUser/></td>}
+         <Type_icon type_process={props.type}/>
+        </tr>
+        </tbody>
+      </table>
+        </Accordion.Body>
+      </Accordion>
+      
     </div>
   )
 }
