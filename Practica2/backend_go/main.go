@@ -149,8 +149,9 @@ func GetInfo(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	//fmt.Println(info2.Id)
-	comando:= "sudo cat /proc/"+info2.Id+"/maps" 
+	comando:= "echo 123 | sudo -S cat /proc/"+info2.Id+"/maps" 
 	cmd := exec.Command("sh", "-c", comando)
+	cmd.Stdin = strings.NewReader("123")
 	salida, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println(err)
