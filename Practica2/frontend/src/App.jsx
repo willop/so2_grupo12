@@ -8,11 +8,11 @@ import { BsFillSignStopFill } from "react-icons/bs";
 import { GiShamblingZombie } from "react-icons/gi";
 import { MdBedtime } from "react-icons/md";
 
-import { Col, Nav, Row, Tab, Carousel } from 'react-bootstrap';
+import { Col, Nav, Row, Tab } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Import react-circular-progressbar module and styles
-import { CircularProgressbar, CircularProgressbarWithChildren, buildStyles } from "react-circular-progressbar";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
 import {
@@ -40,7 +40,11 @@ ChartJS.register(
 
 
 export default function App() {
-  const delay = 5;
+  const delay = 3;
+  const [cantejec, setcantejec] = useState(0);
+  const [cantzom, setcantzom] = useState(0);
+  const [cantdet, setcantdet] = useState(0);
+  const [cantsus, setcantsus] = useState(0);
   const [info_cpu, setCPU] = useState([]);
   const timer = useRef(null);
   const [info_ram, setRAM] = useState({
@@ -52,7 +56,6 @@ export default function App() {
     Actual_thread: 8,
     Utilizada: 12
   });
-  var usada = (info_ram.Utilizada) / (1024 * 1024)
   const [historialmemoria, sethis] = useState([])
   const [historialtiempo, settiempo] = useState([])
   const [cantpross, setcantross] = useState();
@@ -83,20 +86,24 @@ export default function App() {
       var query = await getRAM();
       var result = await query.json();
       var result2 = JSON.parse(result)
-      console.log(result2);
-      /*setRAM(result2);
-      var temmpnum = (result2.Utilizada / (1024 * 1024)).toFixed(2) 
+      //console.log(result2);
+      setRAM(result2);
+      var temmpnum = (result2.RAM +  result2.Utilizada).toFixed(2) 
       historialmemoria.push(parseFloat(temmpnum))
       var timeee = new Date().getHours() +":"+ new Date().getMinutes()
       
       historialtiempo.push(timeee)
       //console.log(historialmemoria)
-      */
+      
       query = await getCPU();
       result = await query.json();
       var result2 = JSON.parse(result)
-      //console.log(result2);
+      
       setCPU(result2.Procesos);
+      setcantejec(result2.Procesos.filter( proceso => proceso.statep === '0').length);
+      setcantzom(result2.Procesos.filter( proceso => proceso.statep === '4').length);
+      setcantdet(result2.Procesos.filter( proceso => proceso.statep === '8').length)
+      setcantsus(result2.Procesos.filter( proceso => proceso.statep === '1' || proceso.statep === '1026').length);
       setcantross(result2.Cantidad);
     } catch (e) {
       console.log(e)
@@ -133,8 +140,8 @@ export default function App() {
         <div id="Contenedor_grafica">
           <center><h3>RAM</h3></center>
           <CircularProgressbar className='tam_grafica'
-            value={info_ram.USADA}
-            text={`${info_ram.USADA}%`}
+            value={((info_ram.RAM + info_ram.Utilizada)/(info_ram.RAM)*100).toFixed(2)}
+            text={`${((info_ram.RAM + info_ram.Utilizada)/(info_ram.RAM)*100).toFixed(2)}%`}
             circleRatio={0.75}
             styles={buildStyles({
               rotation: 1 / 2 + 1 / 8,
@@ -143,8 +150,8 @@ export default function App() {
               trailColor: "#C4C4C4 " //fondo
             })} />
           <center>
-            <h4>{info_ram.USADA.toFixed(2) + "Gb/" + (info_ram.RAM / (1024)).toFixed(2) + "Mb"}</h4>
-            <h4>{"Libre: " + (info_ram.FREE / (1024)).toFixed(2) + "Mb"}</h4>
+            <h4>{(info_ram.RAM + info_ram.Utilizada).toFixed(2) + "Mb/" + (info_ram.RAM).toFixed(2) + "Mb"}</h4>
+            <h4>{"Libre: " + (-info_ram.Utilizada).toFixed(2) + "Mb"}</h4>
           </center>
         </div>
         <div id="Contenedor_grafica">
@@ -205,19 +212,18 @@ export default function App() {
       </div>
       <div id='Procesos'>
       <div id='P_execute' className='Tipe_process'>
-          <center><h4>En ejecucion</h4></center>
+          <center><h4>En ejecucion  #{cantejec}</h4></center>
           {//running, zombie, stoped, sleep
           }
           <Process type="running" idp={"PID"} name={"Nombre"} ram={"RA"} userp={"User"} />
           {
-
             info_cpu.map((process, index) => {
               if (process.statep === "0") {
                 return (
                   <Process key={process.idp} type="running" idp={process.idp} name={process.nproceso} ram={process.ramp} userp={process.userp} />
                 )
               }
-            })
+            } )
           }
         </div>
       </div>
@@ -225,10 +231,10 @@ export default function App() {
       <br />
       <div id='Procesos'>
         <div id='P_zombie' className='Tipe_process'>
-          <center><h4>Zombie</h4></center>
+          <center><h4>Zombie  #{cantzom}</h4></center>
           {<Process type="zombie" idp={"PID"} name={"Nombre"} ram={"RA"} userp={"User"} />}
           {
-            info_cpu.map((process, index) => {
+            info_cpu.map((process, index) => { 
               if (process.statep === "4") {
                 return (
                   <Process key={process.idp} type="zombie" idp={process.idp} name={process.nproceso} ram={process.ramp} userp={process.userp} />
@@ -242,7 +248,7 @@ export default function App() {
       <br />
       <div id='Procesos'>
       <div id='P_stoped' className='Tipe_process'>
-          <center><h4>Detenido</h4></center>
+          <center><h4>Detenido  #{cantdet}</h4></center>
           {<Process type="stoped" idp={"PID"} name={"Nombre"} ram={"RA"} userp={"User"} />}
           {
             info_cpu.map((process, index) => {
@@ -261,9 +267,10 @@ export default function App() {
       <div id="Procesos">
       
         <div id='P_sleep' className='Tipe_process'>
-          <center><h4>Suspendido</h4></center>
+          <center><h4>Suspendido #{cantsus}</h4></center>
           {<Process type="sleep" idp={"PID"} name={"Nombre"} ram={"RA"} userp={"User"} />}
           {
+            
             info_cpu.map((process, index) => {
               if (process.statep === "1" || process.statep === "1026") {
                 return (
