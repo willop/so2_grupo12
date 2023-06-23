@@ -16,7 +16,7 @@
 ## Practica 2
 </br>
 
-
+s
 # Descripcion
 
 Más del 50% de los servidores utilizados para construir los servicios de internet utilizan el sistema operativo Linux. Debido a que es un sistema seguro y de código abierto, las empresas lo utilizan por sus garantías y bajo costo.
@@ -331,6 +331,66 @@ shutdown now
 <img src="./img/21.png">
 <br/>
 
+
 ---
 Fin de la instalación
 ---
+
+# Cambios en los modulos por cambio de version
+---
+## Version de kernel 5.4
+---
+## Cambios en el modulo de cpu
+
+* Utilizando version > 5.6
+```
+<linux/sched.h>
+```
+```
+state
+```
+```
+static struct proc_ops operaciones =
+{
+    proc_ops.open = al_abrir,
+    proc_ops.read = seq_read
+};
+```
+
+
+
+* Utilizando version = 5.4
+```
+#include <linux/sched/signal.h> 
+```
+```
+_state
+```
+```
+static struct file_operations operaciones =
+{
+    .open = al_abrir,
+    .read = seq_read
+};
+```
+
+
+## Cambios en el modulo de memoria
+
+* Utilizando version > 5.6
+```
+static struct proc_ops operaciones =
+{
+    proc_ops.open = al_abrir,
+    proc_ops.read = seq_read
+};
+```
+
+* Utilizando version = 5.4
+```
+static struct file_operations operaciones =
+{
+    .open = al_abrir,
+    .read = seq_read
+};
+```

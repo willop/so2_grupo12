@@ -7,7 +7,7 @@
 #include <linux/seq_file.h>
 #include <linux/hugetlb.h>
 
-#include <linux/sched/signal.h>
+#include <linux/sched/signal.h>  //----------------------------> Cambio  de #include <linux/sched.h> -> #include <linux/sched/signal.h> 
 #include <linux/mm.h>
 #include <linux/cred.h>
 
@@ -42,7 +42,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         seq_printf(archivo, "{\n");
         seq_printf(archivo, "\"idp\":\"%d\",\n", cpu->pid);                                 //para id
         seq_printf(archivo, "\"nproceso\":\"%s\",\n", cpu->comm);                           //para nombre
-        seq_printf(archivo, "\"statep\":\"%d\",\n", cpu->state);                          //para estado
+        seq_printf(archivo, "\"statep\":\"%d\",\n", cpu->state);                          //para estado ----------> se cambio de _state a state
         //seq_printf(archivo, "\"ramp\":\"%lu\",\n", get_mm_rss(cpu->mm));//(cpu->acct_vm_mem1);         //para ram
         if(cpu->mm) {
             seq_printf(archivo, "\"ramp\":\"%lu\",\n", (get_mm_rss(cpu->mm)<<PAGE_SHIFT)/(1024*1024));
@@ -64,8 +64,8 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
             seq_printf(archivo, "\"hid\":\"%d\",\n", hijos->pid);
             //seq_printf(archivo, "\"hid\":\"%d\",\n", );
             //seq_printf(archivo, " --------> ");
-            seq_printf(archivo, "\"hnombre\":\"%s\",\n", hijos->comm);
-            seq_printf(archivo, "\"hestado\":\"%d\",\n", hijos->state);
+            seq_printf(archivo, "\"hnombre\":\"%s\",\n", hijos->comm);  //---------------------> se cambio de __comm a comm
+            seq_printf(archivo, "\"hestado\":\"%d\",\n", hijos->state);  //---------------------> se cambio de __state a state
             if(hijos->mm) {
                 seq_printf(archivo, "\"hram\":\"%lu\"\n", (get_mm_rss(hijos->mm)<<PAGE_SHIFT)/(1024*1024));
             }else{
@@ -87,7 +87,10 @@ static int al_abrir(struct inode *inode, struct file *file)
     return single_open(file, escribir_archivo, NULL);
 }
 
+
 //Si el kernel es 5.6 o mayor se usa la estructura proc_ops
+//en este caso como es un kernel 5.4 se utilizo .open y .read
+// proc_ops -> file_operations
 static struct file_operations operaciones =
 {
     .open = al_abrir,

@@ -79,6 +79,7 @@ static int al_abrir(struct inode *inode, struct file *file)
 }
 
 //Si el kernel es 5.6 o mayor se usa la estructura proc_ops
+//en este caso como es un kernel 5.4 se utilizo .open y .read
 static struct file_operations operaciones =
 {
     .open = al_abrir,
