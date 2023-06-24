@@ -3,7 +3,7 @@ import { url_api } from "../config/RoutePath"
 const url_cpu   = url_api + 'getCPU'
 const url_ram   = url_api + 'getRAM'
 const url_kill  = url_api + 'kill'
-const url_getinfo  = url_api + 'getinfo'
+const url_getinfo  = url_api + 'getinfomem'
 
 
 /* CPU */
