@@ -8,7 +8,7 @@ export default function Router() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<App />} > </Route>
-                <Route path="/info/:pid" element={<Info />} > </Route>
+                <Route path="/info/:pid/:nombre" element={<Info />} > </Route>
             </Routes>
         </BrowserRouter>
     )

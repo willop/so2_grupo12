@@ -13,10 +13,9 @@
 </br>
 
 
-## Practica 2
+## Practica 3
 </br>
 
-s
 # Descripcion
 
 Más del 50% de los servidores utilizados para construir los servicios de internet utilizan el sistema operativo Linux. Debido a que es un sistema seguro y de código abierto, las empresas lo utilizan por sus garantías y bajo costo.
@@ -333,9 +332,41 @@ shutdown now
 
 
 ---
-Fin de la instalación
----
+<br/>
+<br/>
+<br/>
 
+# Lectura del archivo smaps
+* Es /proc/PID/smapsuna extensión basada en mapas, que muestra el consumo de memoria para cada uno de los mapeos del proceso. Para cada uno de los mapeos hay una serie de líneas como las siguientes:
+```
+08048000-080bc000 r-xp 00000000 03:02 13130      /bin/bash
+Size:               1084 kB
+Rss:                 892 kB
+Pss:                 374 kB
+Shared_Clean:        892 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:         0 kB
+Referenced:          892 kB
+Anonymous:             0 kB
+Swap:                  0 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Locked:              374 kB
+```
+
+ La primera de estas líneas muestra la misma información que se muestra para la asignación en /proc/PID/maps . Las líneas restantes muestran el tamaño del mapeo ( tamaño ), la cantidad del mapeo que reside actualmente en RAM ( RSS ), la parte proporcional del proceso de este mapeo ( PSS ), el número de páginas privadas limpias y sucias en el cartografía. Tenga en cuenta que incluso una página que es parte de un mapeo MAP_SHARED , pero tiene solo un pte mapeado, es decir, actualmente es utilizada por un solo proceso, se contabiliza como privada y no como compartida. " Referenciada " indica la cantidad de memoria actualmente marcada como referenciada o accedida. " Anonimo" muestra la cantidad de memoria que no pertenece a ningún archivo. Incluso una asignación asociada a un archivo puede contener páginas anónimas: cuando se modifica MAP_PRIVATE y una página, la página del archivo se reemplaza por una copia anónima privada. " Swap " muestra cómo también se usa mucha memoria anónima, pero fuera de intercambio.
+
+<br/>
+<img src="./img/23.png">
+<br/>
+
+
+# Despliegue de información en el front
+<br/>
+<img src="./img/25.png">
+<br/>
+<br/>
 
 
 # Cambios en los modulos por cambio de version
@@ -396,3 +427,5 @@ static struct file_operations operaciones =
     .read = seq_read
 };
 ```
+
+

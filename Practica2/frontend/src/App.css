@@ -69,3 +69,19 @@ li{
     width: 90%;
     margin-left: 5%;
 }
+
+#graficasobrepuesta{
+    display: flex;
+}
+
+#graficabarras{
+    width: 70%;
+}
+
+#alertss{
+    width: 30%;
+}
+
+#aux_alets{
+    width: 80%;    
+}

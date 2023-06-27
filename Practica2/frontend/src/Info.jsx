@@ -1,15 +1,83 @@
 import { React, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { get_info } from './api/getmodules';
+import { Alert } from 'react-bootstrap'
 import Table from 'react-bootstrap/Table';
+
 import { FcCheckmark, FcCancel, FcFolder } from "react-icons/fc";
+import "react-circular-progressbar/dist/styles.css";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+import { Bar } from 'react-chartjs-2';
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 
-var tamtotalsize=0;
-var totalrss = 0;
+var tamtotalsize = 10;
+var totalrss = 30;
+var direinicio = "";
+var dirfinal = "";
 
 export default function Info() {
   var params = useParams();
+
+  const label = ["Memoria"]
+  const [memsize, setmemsize] = useState(tamtotalsize)
+  const [memrss, setmemrss] = useState(totalrss)
+
+  var datass = {
+    labels: label,
+    datasets: [
+      {
+        label: 'Memoria size (Mb)',
+        backgroundColor: 'rgba(0, 255, 255, 0.2)',
+        borderColor: 'rgb(0, 0, 0)',
+        borderWidth: 1,
+        data: [memsize]
+      },
+      {
+        label: 'Memoria rss (Mb)',
+        backgroundColor: 'rgba(0, 255, 0, 0.2)',
+        borderColor: 'rgb(0, 0, 0)',
+        borderWidth: 1,
+        data: [memrss]
+      }
+    ]
+  }
+  var optionsss = {
+    plugins: {
+      title: {
+        display: true,
+        text: 'Histograma del uso de memoria ram en MB utilizada'
+      }
+    },
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+      },
+      y: {
+        stacked: false,
+      },
+    },
+  }
+
+
+
   const [infor, setinfo] = useState([]);
 
   const getInfo = async (id) => {
@@ -19,10 +87,14 @@ export default function Info() {
       var result2 = JSON.parse(result)
       //parseStringToObject(result2.Info)
       setinfo(parseStringToObject(result2.Info))
+      setmemsize(tamtotalsize)
+      setmemrss(totalrss)
     } catch (e) {
       console.error(e)
     }
   }
+
+
 
   useEffect(() => {
     getInfo(params.pid)
@@ -34,27 +106,50 @@ export default function Info() {
       <br />
       <br />
       <div>
-        <center><h1>Id: {params.pid}</h1>
+        <center><h1>Id: {params.pid} - {params.nombre}</h1>
           <br />
           <h3><FcFolder />  /proc/{params.pid}/maps  </h3>
-        </center>
+        </center> 
       </div>
       <br /><br />
       <div id="grafica_info">
-      <center>
-      <div></div>
-      <p>32asd1f32a1sd</p>
-      <div>
-
-          <h3>{tamtotalsize.toFixed(4)} Mb</h3>
-          <br />
-          <h3>{totalrss.toFixed(4)} Mb</h3>
-        
-      </div>
-      <div>
-        <p>a321sdf3as1d5</p>
-      </div>
-      </center>
+        <center>
+          <div></div>
+          <p>Inicio:<br/>{direinicio}</p>
+          <div id="graficasobrepuesta">
+            <div id="alertss">
+              <div id="aux_alets">
+              <Alert variant="success" width="80%">
+                <Alert.Heading>Memoria residente</Alert.Heading>
+                <hr />
+                <h3>
+                  {totalrss.toFixed(4)} Mb
+                </h3>               
+              </Alert>
+              <Alert variant="warning" width="80%">
+                <Alert.Heading>Memoria virtual</Alert.Heading>
+                <hr />
+                <h3>
+                  {tamtotalsize.toFixed(4)} Mb
+                </h3>               
+              </Alert>
+              <Alert variant="primary" width="80%">
+                <Alert.Heading>Memoria residente</Alert.Heading>
+                <hr />
+                <h3>
+                  {((totalrss/tamtotalsize)*100).toFixed(2)}%
+                </h3>               
+              </Alert>
+              </div>
+            </div>
+            <div id="graficabarras">
+              <Bar data={datass} width={200} color={'rgb(0, 0, 0)'} height={50} options={optionsss} />
+            </div>
+          </div>
+          <div>
+            <p>Fin:<br/>{dirfinal}</p>
+          </div>
+        </center>
       </div>
       <br />
       <br />
@@ -145,7 +240,7 @@ function parseStringToObject(inputString) {
   for (const line of detmem) {
     const parts = line.InfoGen.split(" ");
     if (parts.length >= 6) {
-      tamtotalsize +=parseFloat((line.Size.match(regex)[0] / 1024).toFixed(4))
+      tamtotalsize += parseFloat((line.Size.match(regex)[0] / 1024).toFixed(4))
       totalrss += parseFloat((line.Rss.match(regex)[0] / 1024).toFixed(4))
       const obj = {
         iniciomemoria: parts[0].split("-")[0],
@@ -165,5 +260,7 @@ function parseStringToObject(inputString) {
       data.push(obj);
     }
   }
+  direinicio = data[0].iniciomemoria
+  dirfinal = data[data.length - 1].finmemoria
   return data;
 }

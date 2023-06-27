@@ -13,7 +13,7 @@ const Proceso = props => {
         <table>
         <tbody>
         <tr onDoubleClick={()=>{Kill_process(props.idp,props.name)}}  >
-          <td width="15%" onClick={()=>{window.location.href = "/info/"+props.idp}}>{props.idp}</td>
+          <td width="15%" onClick={()=>{window.location.href = "/info/"+props.idp+"/"+props.name}}>{props.idp}</td>
           <td width="50%">{props.name}</td>
           <td width="20%">{props.ram}Mb</td>
           {props.userp === '0'?

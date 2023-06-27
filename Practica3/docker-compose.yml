@@ -1,0 +1,25 @@
+version: "3.3"
+services:
+
+  backend: 
+    container_name: "backend"
+    image: willop/p2_backend_201408419:latest
+    ports:
+      - 4000:4000
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+ 
+  frontend: 
+    container_name: "frontend"
+    image: willop/p2_frontend_201408419:latest
+    depends_on:
+      - backend
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_BACKEND=${REACT_APP_BACKEND}
+  
